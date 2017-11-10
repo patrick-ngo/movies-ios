@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.makeKeyAndVisible()
         
-        self.window?.rootViewController = UINavigationController(rootViewController: MovieListings())
+        self.window?.rootViewController = UINavigationController(rootViewController: MovieListingsVC())
         
         // Override point for customization after application launch.
         return true

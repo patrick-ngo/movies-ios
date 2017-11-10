@@ -22,7 +22,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         tv.dataSource = self
         
         //cell registration
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
+        tv.register(MovieListingsCell.self, forCellReuseIdentifier: String(describing: MovieListingsCell.self))
         
         return tv
     }()
@@ -65,8 +65,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self))
-        cell?.backgroundColor = .blue
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListingsCell.self)) as? MovieListingsCell
         return cell!
     }
     
