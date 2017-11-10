@@ -53,11 +53,14 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func setupNavBar() {
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+        
         guard let navBar = self.navigationController?.navigationBar else { return }
         
-        navBar.tintColor = UIColor.Button.pink
-        navBar.barTintColor = .white
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.Button.pink]
+        navBar.tintColor = UIColor.white
+        navBar.barTintColor = UIColor.NavBar.purple
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         
         self.navigationItem.title = "TMDb"
         
@@ -129,7 +132,9 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
             self.isLoading = false
             
             //stop refreshing
-            self.refreshControl.endRefreshing()
+            if self.refreshControl.isRefreshing {
+                self.refreshControl.endRefreshing()
+            }
         }
     }
     

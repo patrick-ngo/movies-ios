@@ -17,14 +17,13 @@ extension UIColor {
     
     
     struct Button {
-        static let pink = UIColor(hex: 0xff00bf)
-        static let blue = UIColor(hex: 0x352385)
-        static let darkBlue = UIColor(hex: 0x333447)
+        static let purple = UIColor(hex: 0x6441a5)
+        static let lightPurple = UIColor(hex: 0xb9a3e3)
     }
     
     struct Text {
         static let darkBlue = UIColor(hex: 0x333447)
-        static let darkGrey = UIColor(hex: 0x333333)
+        static let darkGrey = UIColor(hex: 0x262626)
     }
     
     struct Border {
@@ -33,10 +32,10 @@ extension UIColor {
     }
     
     struct Background {
-        static let grey = UIColor(hex: 0xf3f3f5)
+        static let grey = UIColor(hex: 0xF1F1F1)
     }
     
     struct NavBar {
-        static let pink = UIColor(hex: 0xff00bf)
+        static let purple = UIColor(hex: 0x6441a5)
     }
 }
