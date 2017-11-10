@@ -43,7 +43,19 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func setupNavBar() {
+        guard let navBar = self.navigationController?.navigationBar else { return }
         
+        navBar.tintColor = UIColor.Button.pink
+        navBar.barTintColor = .white
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.Button.pink]
+        
+        self.navigationItem.title = "TMDb"
+        
+        if #available(iOS 11.0, *) {
+            navBar.prefersLargeTitles = true
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
      func setupViews() {
