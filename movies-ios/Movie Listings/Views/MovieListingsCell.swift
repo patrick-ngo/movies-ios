@@ -26,13 +26,15 @@ class MovieListingsCell: UITableViewCell {
         if let genres = movie.genre_ids, genres.count > 0 {
             
             //for each category string from api, find matching ProfessionalCategory enum
-            var genreIds:[String] = []
-            for genre in genres {
-                let genreString = String(genre)
-                genreIds.append(genreString)
+            var genreNames:[String] = []
+            for genreId in genres {
+                
+                if let genre = Constants.allGenres().first(where: { genreId == $0.id() }) {
+                    genreNames.append(genre.name())
+                }
             }
             
-            self.categoryLabel.text = genreIds.joined(separator: " • ")
+            self.categoryLabel.text = genreNames.joined(separator: " • ")
         }
         
         //poster image
@@ -146,7 +148,7 @@ class MovieListingsCell: UITableViewCell {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         if highlighted {
-            self.backgroundColor = UIColor.Button.pink.withAlphaComponent(0.3)
+            self.backgroundColor = UIColor.Button.purple.withAlphaComponent(0.3)
         } else {
             self.backgroundColor = .white
         }
