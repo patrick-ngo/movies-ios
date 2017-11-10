@@ -12,7 +12,7 @@ import SDWebImage
 
 class MovieListingsCell: UITableViewCell {
     
-    //MARK: - Helper Methods -
+    //MARK: - Display data -
     
     func updateWith(movie: MovieModel?) {
         guard let movie = movie else { return }
@@ -44,17 +44,11 @@ class MovieListingsCell: UITableViewCell {
         
         //review rating
         if let average = movie.vote_average, average > 0{
-            
+            self.noReviewsLabel.text = String(average)
         }
     }
     
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        if highlighted {
-            self.backgroundColor = UIColor.Button.pink.withAlphaComponent(0.5)
-        } else {
-            self.backgroundColor = .white
-        }
-    }
+
     
     //MARK: - Views -
     
@@ -146,5 +140,15 @@ class MovieListingsCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Helper Methods -
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        if highlighted {
+            self.backgroundColor = UIColor.Button.pink.withAlphaComponent(0.3)
+        } else {
+            self.backgroundColor = .white
+        }
     }
 }

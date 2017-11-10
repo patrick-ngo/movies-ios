@@ -13,6 +13,11 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     var movieList: [MovieModel] = []
     
+    private var page = 0
+    private var knownMaxItemCount = 0
+    private var isLoading =  false
+    private var hasNext = true
+    
     //MARK: - Views -
     
     private lazy var tableView : UITableView = {
@@ -25,12 +30,14 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         //cell registration
         tv.register(MovieListingsCell.self, forCellReuseIdentifier: String(describing: MovieListingsCell.self))
+        tv.register(TableViewLoadingCell.self, forCellReuseIdentifier: String(describing: TableViewLoadingCell.self))
         
         return tv
     }()
     
-    private let refreshControl:UIRefreshControl = {
+    private lazy var refreshControl:UIRefreshControl = {
         let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(self.reloadData(refreshControl:)), for: .valueChanged)
         return rc
     }()
     
@@ -71,18 +78,43 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
-    func loadData() {
+    func loadData(reloadAll:Bool = false) {
+        guard !self.isLoading else {
+            return
+        }
         
-        MoviesAPI.shared.retrieveMovies(page: 1) { (result, error) in
-            
-            if let result = result, error == nil {
+        //signal start loading
+        self.isLoading = true
+        
+        if reloadAll {
+            self.page = 1
+        }
+        else {
+            self.page += 1
+        }
+        
+        MoviesAPI.shared.retrieveMovies(page: self.page) { (result, error) in
 
+            if let result = result, error == nil {
+                
                 do {
                     let moviesResponse = try JSONDecoder().decode(MovieListModel.self, from: result)
+                    
+                    //check if more to load after
+                    if let totalPages = moviesResponse.total_pages {
+                        self.hasNext = self.page < totalPages
+                    }
 
+                    
                     //set list of movies
                     if let movies = moviesResponse.results {
-                        self.movieList = movies
+                        
+                        if reloadAll {
+                            self.movieList = movies
+                        }
+                        else {
+                            self.movieList = self.movieList + movies
+                        }
                     }
                     
                     //reload table
@@ -92,17 +124,45 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                     print("Error serializing json:", error)
                 }
             }
+            
+            //signal end loading
+            self.isLoading = false
+            
+            //stop refreshing
+            self.refreshControl.endRefreshing()
         }
+    }
+    
+    @objc func reloadData(refreshControl:UIRefreshControl) {
+        self.loadData(reloadAll:true)
     }
 
     //MARK: - TableView Datasource -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if self.hasNext {
+            return movieList.count + 1 //add 1 for the loading cell
+        }
+        
         return movieList.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        //start loading more when nearing the end
+        if indexPath.row >= self.movieList.count - 1 {
+            self.loadData()
+        }
+        
+        //loading cell for last row
+        if self.hasNext,
+            indexPath.row >= self.movieList.count {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TableViewLoadingCell.self))
+            return cell!
+        }
         
         let movieCell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListingsCell.self)) as? MovieListingsCell
         

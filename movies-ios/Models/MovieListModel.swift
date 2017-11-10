@@ -12,6 +12,8 @@ struct MovieListModel:Decodable {
     let userId: Int?
     let name: Int?
     let results: [MovieModel]?
+    let total_results: Int?
+    let total_pages: Int?
 }
 
 
