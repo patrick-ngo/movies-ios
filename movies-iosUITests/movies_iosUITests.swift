@@ -2,7 +2,7 @@
 //  movies_iosUITests.swift
 //  movies-iosUITests
 //
-//  Created by Charmaine on 11/10/17.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2017 patrickngo. All rights reserved.
 //
 
