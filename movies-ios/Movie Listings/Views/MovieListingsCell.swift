@@ -8,8 +8,53 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 class MovieListingsCell: UITableViewCell {
+    
+    //MARK: - Helper Methods -
+    
+    func updateWith(movie: MovieModel?) {
+        guard let movie = movie else { return }
+        
+        //name
+        if let name = movie.title {
+            self.nameLabel.text = name
+        }
+        
+        //categories
+        if let genres = movie.genre_ids, genres.count > 0 {
+            
+            //for each category string from api, find matching ProfessionalCategory enum
+            var genreIds:[String] = []
+            for genre in genres {
+                let genreString = String(genre)
+                genreIds.append(genreString)
+            }
+            
+            self.categoryLabel.text = genreIds.joined(separator: " • ")
+        }
+        
+        //poster image
+        if let poster = movie.poster_path {
+            
+            let imageUrl = URL(string: "\(MoviesAPI.BASE_URL_IMAGES_LOW)\(poster)")
+            self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
+        }
+        
+        //review rating
+        if let average = movie.vote_average, average > 0{
+            
+        }
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        if highlighted {
+            self.backgroundColor = UIColor.Button.pink.withAlphaComponent(0.5)
+        } else {
+            self.backgroundColor = .white
+        }
+    }
     
     //MARK: - Views -
     

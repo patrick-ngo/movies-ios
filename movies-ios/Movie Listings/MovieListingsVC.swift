@@ -11,6 +11,8 @@ import SnapKit
 
 class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var movieList: [MovieModel] = []
+    
     //MARK: - Views -
     
     private lazy var tableView : UITableView = {
@@ -40,6 +42,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 
         self.setupNavBar()
         self.setupViews()
+        self.loadData()
     }
     
     func setupNavBar() {
@@ -67,18 +70,47 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
             make.top.left.right.bottom.equalTo(0)
         }
     }
+    
+    func loadData() {
+        
+        MoviesAPI.shared.retrieveMovies(page: 1) { (result, error) in
+            
+            if let result = result, error == nil {
+
+                do {
+                    let moviesResponse = try JSONDecoder().decode(MovieListModel.self, from: result)
+
+                    //set list of movies
+                    if let movies = moviesResponse.results {
+                        self.movieList = movies
+                    }
+                    
+                    //reload table
+                    self.tableView.reloadData()
+                }
+                catch {
+                    print("Error serializing json:", error)
+                }
+            }
+        }
+    }
 
     //MARK: - TableView Datasource -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return movieList.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListingsCell.self)) as? MovieListingsCell
-        return cell!
+        let movieCell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListingsCell.self)) as? MovieListingsCell
+        
+        //set movie
+        let movie = movieList[indexPath.row]
+        movieCell?.updateWith(movie: movie)
+        
+        return movieCell!
     }
     
     
@@ -90,7 +122,6 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         //do nothing
     }
     
