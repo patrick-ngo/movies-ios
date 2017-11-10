@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  movies-ios
 //
-//  Created by Charmaine on 11/10/17.
+//  Created by Patrick Ngo on 11/10/17.
 //  Copyright © 2017 patrickngo. All rights reserved.
 //
 
@@ -15,6 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.makeKeyAndVisible()
+        
+        self.window?.rootViewController = UINavigationController(rootViewController: UIViewController())
+        
         // Override point for customization after application launch.
         return true
     }
