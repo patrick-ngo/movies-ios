@@ -9,10 +9,11 @@
 import UIKit
 
 class MovieDetailVC: UIViewController {
-    let locale = NSLocale(localeIdentifier: NSLocale.current.languageCode!)
-    
     var movieId: Int? = nil
-    var movie: MovieModel? = nil {
+    
+    private let locale = NSLocale(localeIdentifier: NSLocale.current.languageCode!)
+    
+    private var movie: MovieModel? = nil {
         didSet {
             guard let movie = movie else { return }
             
@@ -25,6 +26,8 @@ class MovieDetailVC: UIViewController {
             // Title
             if let name = movie.title {
                 self.titleLabel.text = name
+                
+                // Also change navigation bar title
                 self.title = name
             }
             
@@ -170,7 +173,6 @@ class MovieDetailVC: UIViewController {
             make.centerX.equalTo(self.posterImageView.snp.centerX)
             make.left.right.equalTo(15)
         }
-        
 
         self.languageLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.synopsysLabel.snp.bottom).offset(10)
@@ -199,6 +201,7 @@ class MovieDetailVC: UIViewController {
                 }
                 catch let error {
                     let alert = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
                     self.present(alert, animated: true)
                 }
             }

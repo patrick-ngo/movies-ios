@@ -9,12 +9,9 @@
 import UIKit
 
 extension UIColor {
-    
-    
     convenience init(hex: Int) {
         self.init(red: (CGFloat((hex & 0xff0000) >> 16)) / 255.0, green: (CGFloat((hex & 0xff00) >> 8)) / 255.0, blue: (CGFloat(hex & 0xff)) / 255.0, alpha: 1.0)
     }
-    
     
     struct Button {
         static let purple = UIColor(hex: 0x6441a5)
@@ -22,7 +19,6 @@ extension UIColor {
     }
     
     struct Text {
-        static let darkBlue = UIColor(hex: 0x333447)
         static let darkGrey = UIColor(hex: 0x262626)
     }
     
