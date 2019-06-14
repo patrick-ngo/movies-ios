@@ -26,12 +26,11 @@ class MovieListingsCell: UITableViewCell {
         if let genres = movie.genre_ids, genres.count > 0 {
             
             //for each category string from api, find matching ProfessionalCategory enum
-            var genreNames:[String] = []
-            for genreId in genres {
-                
+            let genreNames = genres.map { (genreId) -> String in
                 if let genre = Constants.allGenres().first(where: { genreId == $0.id() }) {
-                    genreNames.append(genre.name())
+                    return genre.name()
                 }
+                return ""
             }
             
             self.genresLabel.text = genreNames.joined(separator: " • ")
