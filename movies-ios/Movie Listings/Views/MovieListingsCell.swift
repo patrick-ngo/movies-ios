@@ -19,10 +19,10 @@ class MovieListingsCell: UITableViewCell {
         
         //name
         if let name = movie.title {
-            self.nameLabel.text = name
+            self.titleLabel.text = name
         }
         
-        //categories
+        // Genres
         if let genres = movie.genre_ids, genres.count > 0 {
             
             //for each category string from api, find matching ProfessionalCategory enum
@@ -34,19 +34,19 @@ class MovieListingsCell: UITableViewCell {
                 }
             }
             
-            self.categoryLabel.text = genreNames.joined(separator: " • ")
+            self.genresLabel.text = genreNames.joined(separator: " • ")
         }
         
-        //poster image
+        // Poster image
         if let poster = movie.poster_path {
             
             let imageUrl = URL(string: "\(MoviesAPI.BASE_URL_IMAGES_LOW)\(poster)")
             self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
         }
         
-        //review rating
-        if let average = movie.vote_average, average > 0{
-            self.noReviewsLabel.text = String(average)
+        // Popularity
+        if let popularity = movie.popularity, popularity > 0{
+            self.popularityLabel.text = String(popularity)
         }
     }
     
@@ -56,27 +56,23 @@ class MovieListingsCell: UITableViewCell {
     
     let posterImageView : UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 25 //size 50
-        iv.layer.borderColor = UIColor.Border.around.cgColor
-        iv.layer.borderWidth = 1
-        iv.backgroundColor = UIColor.white
         return iv
     }()
     
-    let noReviewsLabel : UILabel = {
+    let popularityLabel : UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 1
         lbl.font = UIFont.systemFont(ofSize: 12)
         lbl.textColor = UIColor.Text.darkGrey
-        lbl.text = "Not enough ratings"
+        lbl.text = ""
         lbl.textAlignment = .left
         return lbl
     }()
     
     
-    let categoryLabel : UILabel = {
+    let genresLabel : UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 11)
         lbl.textColor = UIColor.Text.darkGrey
@@ -86,9 +82,9 @@ class MovieListingsCell: UITableViewCell {
     }()
     
     
-    lazy var nameLabel : UILabel = {
+    lazy var titleLabel : UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.systemFont(ofSize: 13)
+        lbl.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         lbl.textColor = UIColor.Text.darkGrey
         lbl.textAlignment = .left
         lbl.numberOfLines = 0
@@ -108,35 +104,35 @@ class MovieListingsCell: UITableViewCell {
         self.selectionStyle = .none
         
         self.contentView.addSubview(self.posterImageView)
-        self.contentView.addSubview(self.nameLabel)
-        self.contentView.addSubview(self.categoryLabel)
-        self.contentView.addSubview(self.noReviewsLabel)
+        self.contentView.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.genresLabel)
+        self.contentView.addSubview(self.popularityLabel)
         
         self.posterImageView.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.contentView.snp.bottom).offset(-15)
             make.left.equalTo(self.contentView.snp.left).offset(10)
-            make.width.height.equalTo(50)
+            make.width.height.equalTo(70)
+            make.top.equalTo(4)
         }
         
-        self.nameLabel.snp.makeConstraints { (make) in
+        self.titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self.posterImageView.snp.right).offset(10)
             make.right.equalTo(self.contentView)
             make.height.equalTo(15)
-            make.bottom.equalTo(self.categoryLabel.snp.top).offset(0)
+            make.top.equalTo(4)
         }
         
-        self.categoryLabel.snp.makeConstraints { (make) in
+        self.genresLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self.posterImageView.snp.right).offset(10)
             make.right.equalTo(self.contentView)
-            make.height.equalTo(13)
-            make.centerY.equalTo(self.posterImageView.snp.centerY).offset(0)
+            make.height.equalTo(16)
+            make.top.equalTo(self.titleLabel.snp.bottom).offset(4)
         }
         
-        self.noReviewsLabel.snp.makeConstraints { (make) in
+        self.popularityLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self.posterImageView.snp.right).offset(10)
             make.right.equalTo(self.contentView)
-            make.height.equalTo(15)
-            make.top.equalTo(self.categoryLabel.snp.bottom).offset(5)
+            make.height.equalTo(16)
+            make.top.equalTo(self.genresLabel.snp.bottom).offset(4)
         }
     }
     
