@@ -67,6 +67,7 @@ class MovieDetailVC: UIViewController {
     
     let containerView: UIView = {
         let iv = UIView()
+        iv.backgroundColor = .white
         return iv
     }()
     
@@ -119,6 +120,17 @@ class MovieDetailVC: UIViewController {
         return lbl
     }()
     
+    lazy var bookButton : UIButton = {
+        let btn = UIButton(type: UIButton.ButtonType.custom)
+        btn.setTitle("BOOK", for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
+        btn.backgroundColor = UIColor.Button.purple
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.addTarget(self, action: #selector(onPressBook), for: .touchUpInside)
+        
+        return btn
+    }()
+    
 
     
     //MARK: - Init -
@@ -132,6 +144,7 @@ class MovieDetailVC: UIViewController {
     func setupViews() {
         self.view.addSubview(self.containerView)
         self.containerView.addSubview(self.scrollView)
+        self.containerView.addSubview(self.bookButton)
 
         self.scrollView.addSubview(self.posterImageView)
         self.scrollView.addSubview(self.titleLabel)
@@ -144,7 +157,8 @@ class MovieDetailVC: UIViewController {
             make.left.right.bottom.top.equalToSuperview()
         }
         self.scrollView.snp.makeConstraints { (make) in
-            make.left.right.bottom.top.equalToSuperview()
+            make.left.right.top.equalToSuperview()
+            make.bottom.equalTo(self.bookButton.snp.top)
         }
 
         self.posterImageView.snp.makeConstraints { (make) in
@@ -182,6 +196,17 @@ class MovieDetailVC: UIViewController {
             make.left.right.equalTo(15)
             make.bottom.equalToSuperview().offset(-30)
         }
+        
+        self.bookButton.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                // Fallback on earlier versions
+                make.bottom.equalTo(0)
+            }
+            make.height.equalTo(50)
+        }
     }
     
     func loadData() {
@@ -201,6 +226,14 @@ class MovieDetailVC: UIViewController {
                     self.present(alert, animated: true)
                 }
             }
+        }
+    }
+    
+    
+    //MARK: - Actions -
+    @objc func onPressBook() {
+        if let url = URL(string: MoviesAPI.CATHAY_URL) {
+            UIApplication.shared.open(url)
         }
     }
 }
