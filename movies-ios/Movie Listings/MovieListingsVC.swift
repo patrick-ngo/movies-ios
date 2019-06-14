@@ -52,15 +52,17 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         self.loadData()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     func setupNavBar() {
-        
-        UIApplication.shared.statusBarStyle = .lightContent
         
         guard let navBar = self.navigationController?.navigationBar else { return }
         
         navBar.tintColor = UIColor.white
         navBar.barTintColor = UIColor.NavBar.purple
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         self.navigationItem.title = "TMDb"
         

@@ -10,9 +10,9 @@ import UIKit
 
 class TableViewLoadingCell: UITableViewCell {
     
-    let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         
