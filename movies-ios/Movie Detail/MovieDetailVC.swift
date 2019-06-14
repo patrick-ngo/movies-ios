@@ -122,7 +122,7 @@ class MovieDetailVC: UIViewController {
     
     lazy var bookButton : UIButton = {
         let btn = UIButton(type: UIButton.ButtonType.custom)
-        btn.setTitle("BOOK", for: .normal)
+        btn.setTitle("BOOK MOVIE", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
         btn.backgroundColor = UIColor.Button.purple
         btn.setTitleColor(UIColor.white, for: .normal)

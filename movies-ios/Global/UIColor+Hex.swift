@@ -15,7 +15,6 @@ extension UIColor {
     
     struct Button {
         static let purple = UIColor(hex: 0x6441a5)
-        static let lightPurple = UIColor(hex: 0xb9a3e3)
     }
     
     struct Text {
@@ -24,7 +23,6 @@ extension UIColor {
     
     struct Border {
         static let around = UIColor(hex: 0xF1F1F1)
-        static let inside = UIColor(hex: 0xF4F4F4)
     }
     
     struct Background {
