@@ -16,10 +16,11 @@ struct MovieModel:Decodable {
     let poster_path: String?
     let original_language: String?
     let original_title: String?
+    let genres: [GenreModel]?
     let genre_ids: [Int]?
     let backdrop_path: String?
     let adult: Bool?
     let overview: String?
     let release_date: String?
+    let runtime: Int?
 }
-
