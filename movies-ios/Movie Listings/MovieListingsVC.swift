@@ -2,8 +2,8 @@
 //  MovieListingsVC.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 11/10/17.
-//  Copyright © 2017 patrickngo. All rights reserved.
+//  Created by Patrick Ngo on 14/06/19.
+//  Copyright © 2019 patrickngo. All rights reserved.
 //
 
 import UIKit
@@ -65,21 +65,16 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         self.navigationItem.title = "TMDb"
-        
-        if #available(iOS 11.0, *) {
-            navBar.prefersLargeTitles = true
-        } else {
-            // Fallback on earlier versions
-        }
     }
     
      func setupViews() {
-
-        self.tableView.addSubview(self.refreshControl)
+        // Add Refresh Control to Table View
+        tableView.refreshControl = refreshControl
         self.view.addSubview(self.tableView)
         
         self.tableView.snp.makeConstraints { (make) in
-            make.top.left.right.bottom.equalTo(0)
+            make.left.right.bottom.equalTo(0)
+            make.top.equalToSuperview()
         }
     }
     
@@ -191,7 +186,5 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //do nothing
     }
-    
-
 }
 
