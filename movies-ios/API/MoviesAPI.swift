@@ -13,7 +13,7 @@ typealias DataCompletionBlock = ( Data? ,_ error: Error?) -> Void
 
 class MoviesAPI
 {
-    static let API_KEY = "e4a3bc287b929e12897dd730b1b153e9"
+    static let API_KEY = "328c283cd27bd1877d9080ccb1604c91"
     static let BASE_URL = "https://api.themoviedb.org/3/"
     static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
     static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
