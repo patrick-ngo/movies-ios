@@ -184,7 +184,12 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //do nothing
+        // Go to movie detail screen
+        let movieDetailVC = MovieDetailVC()
+        let movie = movieList[indexPath.row]
+        movieDetailVC.movieId = movie.id
+
+        self.navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
 
