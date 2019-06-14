@@ -2,8 +2,8 @@
 //  MovieListModel.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 11/11/17.
-//  Copyright © 2017 patrickngo. All rights reserved.
+//  Created by Patrick Ngo on 14/06/19.
+//  Copyright © 2019 patrickngo. All rights reserved.
 //
 
 //Movie List

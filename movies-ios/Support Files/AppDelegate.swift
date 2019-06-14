@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 11/10/17.
-//  Copyright © 2017 patrickngo. All rights reserved.
+//  Created by Patrick Ngo on 14/06/19.
+//  Copyright © 2019 patrickngo. All rights reserved.
 //
 
 import UIKit
