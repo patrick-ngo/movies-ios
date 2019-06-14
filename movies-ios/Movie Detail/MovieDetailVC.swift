@@ -67,7 +67,6 @@ class MovieDetailVC: UIViewController {
     
     let containerView: UIView = {
         let iv = UIView()
-        iv.backgroundColor =  .white
         return iv
     }()
     
@@ -75,9 +74,6 @@ class MovieDetailVC: UIViewController {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.layer.borderColor = UIColor.white.cgColor
-        iv.layer.borderWidth = 3
-        iv.backgroundColor = UIColor.white
         return iv
     }()
     
