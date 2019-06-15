@@ -9,10 +9,13 @@
 import UIKit
 import SnapKit
 import ReSwift
+import RxSwift
+import RxCocoa
 
 class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, StoreSubscriber {
     typealias StoreSubscriberStateType = MovieListState
     
+    let disposeBag = DisposeBag()
     
     private var movieList: [MovieModel] = []
     
@@ -24,7 +27,8 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     private lazy var tableView : UITableView = {
         let tv = UITableView(frame: CGRect.zero, style: .plain)
-        tv.separatorStyle = .none
+        tv.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
+        tv.separatorColor = UIColor.Border.around
         
         tv.delegate = self
         tv.dataSource = self
@@ -33,6 +37,23 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         tv.register(MovieListingsCell.self, forCellReuseIdentifier: String(describing: MovieListingsCell.self))
         tv.register(TableViewLoadingCell.self, forCellReuseIdentifier: String(describing: TableViewLoadingCell.self))
         
+        // Cell size
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 80
+        
+        // Rx item selection
+        tv.rx.itemSelected
+            .map { self.movieList[$0.row] }
+            .bind(onNext: { (movie) in
+                // Update selected movie
+                mainStore.dispatch(SetSelectedMovieId(movieId: movie.id ?? 0))
+                
+                // Go to movie detail screen
+                let movieDetailVC = MovieDetailVC()
+                self.navigationController?.pushViewController(movieDetailVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
         return tv
     }()
     
@@ -132,24 +153,6 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         let movie = movieList[indexPath.row]
         movieCell?.movie = movie
         return movieCell!
-    }
-    
-    
-    //MARK: - TableView Delegate -
-    
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Update selected movie
-        let movie = movieList[indexPath.row]
-        mainStore.dispatch(SetSelectedMovieId(movieId: movie.id ?? 0))
-        
-        // Go to movie detail screen
-        let movieDetailVC = MovieDetailVC()
-        self.navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
 

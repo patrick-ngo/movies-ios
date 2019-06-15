@@ -105,6 +105,7 @@ class MovieListingsCell: UITableViewCell {
             make.left.equalTo(self.contentView.snp.left).offset(10)
             make.width.height.equalTo(70)
             make.top.equalTo(4)
+            make.bottom.equalTo(0).offset(-4)
         }
         
         self.titleLabel.snp.makeConstraints { (make) in
