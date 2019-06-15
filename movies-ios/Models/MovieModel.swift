@@ -7,7 +7,7 @@
 //
 
 //Movie
-struct MovieModel:Decodable {
+struct MovieModel: Codable, Equatable {
     let vote_count: Int?
     let id: Int?
     let vote_average: Double?

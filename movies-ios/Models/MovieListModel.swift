@@ -7,7 +7,7 @@
 //
 
 //Movie List
-struct MovieListModel:Decodable {
+struct MovieListModel: Codable, Equatable {
     let page: Int?
     let userId: Int?
     let name: Int?

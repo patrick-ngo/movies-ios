@@ -7,7 +7,7 @@
 //
 
 // Genre
-struct GenreModel: Decodable {
+struct GenreModel: Codable, Equatable {
     let id: Int?
     let name: String?
 }
