@@ -54,7 +54,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         navBar.barTintColor = UIColor.NavBar.purple
         navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navBar.barStyle = .black
-        self.navigationItem.title = "Discover"
+        self.navigationItem.title = NSLocalizedString("TITLE_DISCOVER", comment: "Discover")
     }
     
      func setupViews() {

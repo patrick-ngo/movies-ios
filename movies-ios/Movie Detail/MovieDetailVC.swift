@@ -45,13 +45,13 @@ class MovieDetailVC: UIViewController {
             // Language
             if let original_language = movie.original_language {
                 if let language = self.locale.displayName(forKey: NSLocale.Key.identifier, value: original_language) {
-                    self.languageLabel.text = "Language: \(language)"
+                    self.languageLabel.text = "\(NSLocalizedString("LABEL_LANGUAGE", comment: "Language")) \(language)"
                 }
             }
             
             // Runtime
             if let runtime = movie.runtime {
-                self.runtimeLabel.text = "Runtime: \(runtime)m"
+                self.languageLabel.text = "\(NSLocalizedString("LABEL_RUNTIME", comment: "Runtime")) \(runtime)m"
             }
         }
     }
@@ -122,7 +122,7 @@ class MovieDetailVC: UIViewController {
     
     lazy var bookButton : UIButton = {
         let btn = UIButton(type: UIButton.ButtonType.custom)
-        btn.setTitle("BOOK MOVIE", for: .normal)
+        btn.setTitle(NSLocalizedString("BUTTON_BOOK_MOVIE", comment: "Book movie").uppercased(), for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
         btn.backgroundColor = UIColor.Button.purple
         btn.setTitleColor(UIColor.white, for: .normal)

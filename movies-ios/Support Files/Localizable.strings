@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  movies-ios
+
+  Created by Patrick Ngo on 2019-06-15.
+  Copyright © 2019 patrickngo. All rights reserved.
+*/
+
+"TITLE_DISCOVER" = "Discover";
+
+"BUTTON_BOOK_MOVIE" = "Book Movie";
+
+"LABEL_LANGUAGE" = "Language:";
+
+"LABEL_RUNTIME" = "Runtime:";
