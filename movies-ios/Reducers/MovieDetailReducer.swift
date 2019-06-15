@@ -17,16 +17,14 @@ func movieDetailReducer(action: Action, state: MovieDetailState?) -> MovieDetail
     // Create the default state if no state provided
     var state = state ?? MovieDetailState()
     
-    // Set the type of actions this reducer can receive
-    guard let action = action as? MoviesStateAction else { return state }
-    
     switch action {
-    case .setSelectedMovieId(let movieId):
-        state.selectedMovieId = movieId
+    
+    case let action as SetSelectedMovieId:
+        state.selectedMovieId = action.movieId
         state.selectedMovie = nil
         
-    case .setSelectedMovie(let movie):
-        state.selectedMovie = movie
+    case let action as SetSelectedMovie:
+        state.selectedMovie = action.movie
         
     default:
         break

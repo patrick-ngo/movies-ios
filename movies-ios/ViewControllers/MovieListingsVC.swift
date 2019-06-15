@@ -51,13 +51,9 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         
         // subscribe to state changes
-//        mainStore.subscribe(self)
         mainStore.subscribe(self) { subcription in
             subcription.select { state in state.movieListState }
         }
-//        mainStore.subscribe(self, transform: {
-//            $0.select(MovieDetailViewState.init)
-//        })
         
         self.loadData()
     }
@@ -149,7 +145,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Update selected movie
         let movie = movieList[indexPath.row]
-        mainStore.dispatch(MoviesStateAction.setSelectedMovieId(movie.id ?? 0))
+        mainStore.dispatch(SetSelectedMovieId(movieId: movie.id ?? 0))
         
         // Go to movie detail screen
         let movieDetailVC = MovieDetailVC()

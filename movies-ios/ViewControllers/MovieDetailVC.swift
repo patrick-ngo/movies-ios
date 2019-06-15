@@ -144,7 +144,6 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
         self.setupViews()
         self.loadData()
         
-//        mainStore.subscribe(self)
         mainStore.subscribe(self) { subcription in
             subcription.select { state in state.movieDetailState }
         }

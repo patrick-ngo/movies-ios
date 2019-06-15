@@ -19,17 +19,15 @@ func movieListReducer(action: Action, state: MovieListState?) -> MovieListState 
     // Create the default state if no state provided
     var state = state ?? MovieListState()
     
-    // Set the type of actions this reducer can receive
-    guard let action = action as? MoviesStateAction else { return state }
-    
     switch action {
-    case .setIsFetchingMovies(let fetching):
-        state.isFetchingMovies = fetching
         
-    case .setMovies(let movies, let page, let hasNext):
-        state.currentPage = page
-        state.hasNext = hasNext
-        state.movies = movies
+    case let action as SetStartFetchingMovies:
+        state.isFetchingMovies = action.isFetchingMovies
+        
+    case let action as SetMovies:
+        state.currentPage = action.page
+        state.hasNext = action.hasNext
+        state.movies = action.movies
         state.isFetchingMovies = false
         
     default:
