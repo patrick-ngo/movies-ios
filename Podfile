@@ -9,6 +9,8 @@ target 'movies-ios' do
   pod 'Alamofire'
   pod 'SDWebImage'
   pod 'SnapKit'
+  pod 'ReSwift'
+  pod 'ReSwiftThunk'
 
   target 'movies-iosTests' do
     inherit! :search_paths
