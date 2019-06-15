@@ -113,6 +113,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
             self.tableView.reloadData()
         }
         
+        // Stop refresh control, if necessary
         if !self.isLoading {
             if self.refreshControl.isRefreshing {
                 self.refreshControl.endRefreshing()
