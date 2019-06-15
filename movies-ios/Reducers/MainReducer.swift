@@ -9,7 +9,7 @@
 import ReSwift
 import ReSwiftThunk
 
-struct AppState: StateType {
+struct AppState: StateType, Equatable {
     var movieListState: MovieListState = MovieListState()
     var movieDetailState: MovieDetailState = MovieDetailState()
 }
