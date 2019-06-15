@@ -11,6 +11,8 @@ target 'movies-ios' do
   pod 'SnapKit'
   pod 'ReSwift'
   pod 'ReSwiftThunk'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 
   target 'movies-iosTests' do
     inherit! :search_paths
