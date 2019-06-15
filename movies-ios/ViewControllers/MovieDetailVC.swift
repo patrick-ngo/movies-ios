@@ -9,9 +9,13 @@
 import UIKit
 import SnapKit
 import ReSwift
+import RxSwift
+import RxCocoa
 
 class MovieDetailVC: UIViewController, StoreSubscriber {
     typealias StoreSubscriberStateType = MovieDetailState
+    
+    let disposeBag = DisposeBag()
     
     var movieId: Int? = nil
     
@@ -130,7 +134,13 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
         btn.backgroundColor = UIColor.Button.purple
         btn.setTitleColor(UIColor.white, for: .normal)
-        btn.addTarget(self, action: #selector(onPressBook), for: .touchUpInside)
+        
+        // Rx button tap
+        btn.rx.tap.bind {
+            if let url = URL(string: MoviesAPI.CATHAY_URL) {
+                UIApplication.shared.open(url)
+            }
+        }.disposed(by: disposeBag)
         
         return btn
     }()
@@ -227,12 +237,5 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
     
     func loadData() {
         mainStore.dispatch(fetchMovieDetail)
-    }
-    
-    //MARK: - Actions -
-    @objc func onPressBook() {
-        if let url = URL(string: MoviesAPI.CATHAY_URL) {
-            UIApplication.shared.open(url)
-        }
     }
 }
