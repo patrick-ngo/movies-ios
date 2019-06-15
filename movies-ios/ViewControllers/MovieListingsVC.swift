@@ -112,6 +112,12 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
             // Reload table with new movies
             self.tableView.reloadData()
         }
+        
+        if !self.isLoading {
+            if self.refreshControl.isRefreshing {
+                self.refreshControl.endRefreshing()
+            }
+        }
     }
     
     
