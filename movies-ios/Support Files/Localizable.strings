@@ -6,9 +6,7 @@
   Copyright © 2019 patrickngo. All rights reserved.
 */
 
-"TITLE_DISCOVER" = "Discover";
-
-"BUTTON_BOOK_MOVIE" = "Book Movie";
+"TITLE_NOW_PLAYING" = "Now Playing";
 
 "LABEL_LANGUAGE" = "Language:";
 

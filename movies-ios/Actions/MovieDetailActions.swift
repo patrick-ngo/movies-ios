@@ -2,7 +2,7 @@
 //  MovieActions.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 2019-06-15.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2019 patrickngo. All rights reserved.
 //
 
@@ -13,20 +13,15 @@ struct SetSelectedMovie: Action {
     let movie: MovieModel
 }
 
-struct SetSelectedMovieId: Action {
-    let movieId: Int
-}
-
-let fetchMovieDetail = Thunk<AppState> { dispatch, getState in
-    guard let state = getState()?.movieDetailState, let movieId = state.selectedMovieId else { return }
+let fetchRelatedMovies = Thunk<AppState> { dispatch, getState in
+    guard let state = getState()?.movieDetailState, let movieId = state.selectedMovie?.id else { return }
     
-    MoviesAPI.shared.retrieveMovie(byId: movieId) { (result, error) in
+    MoviesAPI.shared.retrieveRelatedMovies(byId: movieId) { (result, error) in
         if let result = result, error == nil {
             do {
                 let movieResponse = try JSONDecoder().decode(MovieModel.self, from: result)
                 
-                // Set movie
-                dispatch(SetSelectedMovie(movie: movieResponse))
+                // TODO: Set related movies
             }
             catch let error {
                 print("Error: \(error)")

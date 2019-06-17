@@ -2,8 +2,8 @@
 //  movies_iosUITests.swift
 //  movies-iosUITests
 //
-//  Created by Patrick Ngo on 2019-06-15.
-//  Copyright © 2019 patrickngo. All rights reserved.
+//  Created by Patrick Ngo on 14/06/19.
+//  Copyright © 2017 patrickngo. All rights reserved.
 //
 
 import XCTest

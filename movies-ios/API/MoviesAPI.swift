@@ -13,7 +13,7 @@ typealias DataCompletionBlock = ( Data? ,_ error: Error?) -> Void
 
 class MoviesAPI
 {
-    static let API_KEY = "328c283cd27bd1877d9080ccb1604c91"
+    static let API_KEY = "e4a3bc287b929e12897dd730b1b153e9"
     static let BASE_URL = "https://api.themoviedb.org/3/"
     static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
     static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
@@ -21,33 +21,24 @@ class MoviesAPI
     
     static let shared = MoviesAPI()
     
-    let dateFormatter = DateFormatter()
-    
-    init() {
-        self.dateFormatter.dateFormat = "yyyy-MM-dd"
-    }
-    
     //MARK: - API methods -
     
     // Retrieve list of movies
     func retrieveMovies(page: Int = 1, completionHandler: @escaping DataCompletionBlock) {
-        let endPoint = "discover/movie"
+        let endPoint = "movie/now_playing"
         let url = URL(string: "\(MoviesAPI.BASE_URL)\(endPoint)")!
-        let currentDate = self.dateFormatter.string(from: Date())
         let parameters: Parameters = ["page": page,
-                                      "api_key": MoviesAPI.API_KEY,
-                                      "sort_by": "release_date.desc",
-                                      "primary_release_date.lte": currentDate]
+                                      "api_key": MoviesAPI.API_KEY]
         
         Alamofire.request(url, parameters: parameters).responseJSON { response in
             completionHandler(response.data, response.error)
         }
     }
     
-    // Retrieve single movie by id
-    func retrieveMovie(byId movieId: Int, completionHandler: @escaping DataCompletionBlock) {
-        let endPoint = "movie"
-        let url = URL(string: "\(MoviesAPI.BASE_URL)\(endPoint)/\(movieId)")!
+    // Retrieve related movies by movie id
+    func retrieveRelatedMovies(byId movieId: Int, completionHandler: @escaping DataCompletionBlock) {
+        let endPoint = "movie/\(movieId)/similar"
+        let url = URL(string: "\(MoviesAPI.BASE_URL)\(endPoint)")!
         let parameters: Parameters = ["api_key": MoviesAPI.API_KEY]
         
         Alamofire.request(url, parameters: parameters).responseJSON { response in

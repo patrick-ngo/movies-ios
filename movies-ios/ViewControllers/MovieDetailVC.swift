@@ -2,7 +2,7 @@
 //  MovieDetailVC.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 2019-06-14.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2019 patrickngo. All rights reserved.
 //
 
@@ -45,8 +45,14 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
             }
             
             // Genres
-            if let genres = movie.genres, genres.count > 0 {
-                let genreNames = genres.map { $0.name ?? "" }
+            if let genres = movie.genre_ids, genres.count > 0 {
+                // Match genre ids with genre names
+                let genreNames = genres.map { (genreId) -> String in
+                    if let genre = Constants.allGenres().first(where: { genreId == $0.id() }) {
+                        return genre.name()
+                    }
+                    return ""
+                }
                 self.genresLabel.text = genreNames.joined(separator: " • ")
             }
             
@@ -68,15 +74,9 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
     
     let scrollView : UIScrollView = {
         let sv = UIScrollView()
-        sv.backgroundColor =  UIColor.Background.grey
+        sv.backgroundColor = .white
         sv.alwaysBounceVertical = true
         return sv
-    }()
-    
-    let containerView: UIView = {
-        let iv = UIView()
-        iv.backgroundColor = .white
-        return iv
     }()
     
     let posterImageView : UIImageView = {
@@ -84,6 +84,12 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
         return iv
+    }()
+    
+    let gradientView: UIView = {
+        let v = UIView(frame: CGRect(x: 0, y: 0, width: Int(UIScreen.main.bounds.width), height: 300))
+        v.addGradientAtBottom()
+        return v
     }()
     
     let titleLabel:UILabel = {
@@ -101,6 +107,7 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
         lbl.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         lbl.textColor = UIColor.Text.darkGrey
         lbl.numberOfLines = 0
+        lbl.lineBreakMode = NSLineBreakMode.byWordWrapping
         return lbl
     }()
     
@@ -128,25 +135,6 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
         return lbl
     }()
     
-    lazy var bookButton : UIButton = {
-        let btn = UIButton(type: UIButton.ButtonType.custom)
-        btn.setTitle(NSLocalizedString("BUTTON_BOOK_MOVIE", comment: "Book movie").uppercased(), for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
-        btn.backgroundColor = UIColor.Button.purple
-        btn.setTitleColor(UIColor.white, for: .normal)
-        
-        // Rx button tap
-        btn.rx.tap.bind {
-            if let url = URL(string: MoviesAPI.CATHAY_URL) {
-                UIApplication.shared.open(url)
-            }
-        }.disposed(by: disposeBag)
-        
-        return btn
-    }()
-    
-
-    
     //MARK: - Init -
     
     override func viewDidLoad() {
@@ -160,70 +148,55 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
     }
     
     func setupViews() {
-        self.view.addSubview(self.containerView)
-        self.containerView.addSubview(self.scrollView)
-        self.containerView.addSubview(self.bookButton)
-
+        self.view.addSubview(self.scrollView)
+        self.scrollView.addSubview(self.gradientView)
         self.scrollView.addSubview(self.posterImageView)
+        
         self.scrollView.addSubview(self.titleLabel)
         self.scrollView.addSubview(self.synopsysLabel)
         self.scrollView.addSubview(self.genresLabel)
         self.scrollView.addSubview(self.languageLabel)
         self.scrollView.addSubview(self.runtimeLabel)
-        
-        self.containerView.snp.makeConstraints { (make) in
-            make.left.right.bottom.top.equalToSuperview()
-        }
+
         self.scrollView.snp.makeConstraints { (make) in
-            make.left.right.top.equalToSuperview()
-            make.bottom.equalTo(self.bookButton.snp.top)
+            make.edges.equalTo(0)
+        }
+        
+        self.gradientView.snp.makeConstraints { (make) in
+            make.height.equalTo(300)
+            make.right.left.equalTo(self.view)
         }
 
         self.posterImageView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.scrollView.snp.top).offset(20)
             make.centerX.equalTo(self.scrollView.snp.centerX)
-            make.width.height.equalTo(300)
+            make.top.equalTo(0)
+            make.height.equalTo(300)
         }
         self.titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.posterImageView.snp.bottom).offset(10)
-            make.centerX.equalTo(self.posterImageView.snp.centerX)
             make.left.right.equalTo(15)
         }
-        
+
         self.genresLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.titleLabel.snp.bottom).offset(10)
-            make.centerX.equalTo(self.posterImageView.snp.centerX)
             make.left.right.equalTo(15)
         }
-        
+
         self.synopsysLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.genresLabel.snp.bottom).offset(10)
-            make.centerX.equalTo(self.posterImageView.snp.centerX)
+            make.centerX.equalToSuperview()
             make.left.right.equalTo(15)
         }
 
         self.languageLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.synopsysLabel.snp.bottom).offset(10)
-            make.centerX.equalTo(self.posterImageView.snp.centerX)
             make.left.right.equalTo(15)
         }
 
         self.runtimeLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self.languageLabel.snp.bottom).offset(10)
-            make.centerX.equalTo(self.posterImageView.snp.centerX)
             make.left.right.equalTo(15)
             make.bottom.equalToSuperview().offset(-30)
-        }
-        
-        self.bookButton.snp.makeConstraints { (make) in
-            make.left.right.equalTo(0)
-            if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
-            } else {
-                // Fallback on earlier versions
-                make.bottom.equalTo(0)
-            }
-            make.height.equalTo(50)
         }
     }
     
@@ -236,6 +209,6 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
     
     
     func loadData() {
-        mainStore.dispatch(fetchMovieDetail)
+        mainStore.dispatch(fetchRelatedMovies)
     }
 }

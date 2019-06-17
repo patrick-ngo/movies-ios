@@ -2,7 +2,7 @@
 //  MovieListReducer.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 2019-06-15.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2019 patrickngo. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import ReSwift
 
 struct MovieListState: Equatable {
     var hasNext = false
-    var currentPage = 1
+    var currentPage = 0
     var isFetchingMovies = false
     var movies: [MovieModel] = []
 }

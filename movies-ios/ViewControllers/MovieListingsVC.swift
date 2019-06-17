@@ -2,7 +2,7 @@
 //  MovieListingsVC.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 2019-06-15.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2019 patrickngo. All rights reserved.
 //
 
@@ -46,7 +46,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
             .map { self.movieList[$0.row] }
             .bind(onNext: { (movie) in
                 // Update selected movie
-                mainStore.dispatch(SetSelectedMovieId(movieId: movie.id ?? 0))
+                mainStore.dispatch(SetSelectedMovie(movie: movie))
                 
                 // Go to movie detail screen
                 let movieDetailVC = MovieDetailVC()
@@ -81,11 +81,10 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func setupNavBar() {
         guard let navBar = self.navigationController?.navigationBar else { return }
-        navBar.tintColor = UIColor.white
-        navBar.barTintColor = UIColor.NavBar.purple
-        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navBar.barStyle = .black
-        self.navigationItem.title = NSLocalizedString("TITLE_DISCOVER", comment: "Discover")
+        navBar.tintColor = .black
+        navBar.barTintColor = .white
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+        self.navigationItem.title = NSLocalizedString("Now Playing", comment: "Now Playing")
     }
     
      func setupViews() {

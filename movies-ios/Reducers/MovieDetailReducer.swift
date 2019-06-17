@@ -2,7 +2,7 @@
 //  MovieDetailReducer.swift
 //  movies-ios
 //
-//  Created by Patrick Ngo on 2019-06-15.
+//  Created by Patrick Ngo on 14/06/19.
 //  Copyright © 2019 patrickngo. All rights reserved.
 //
 
@@ -10,7 +10,6 @@ import ReSwift
 
 struct MovieDetailState: Equatable {
     var selectedMovie: MovieModel?
-    var selectedMovieId: Int?
 }
 
 func movieDetailReducer(action: Action, state: MovieDetailState?) -> MovieDetailState {
@@ -18,11 +17,6 @@ func movieDetailReducer(action: Action, state: MovieDetailState?) -> MovieDetail
     var state = state ?? MovieDetailState()
     
     switch action {
-    
-    case let action as SetSelectedMovieId:
-        state.selectedMovieId = action.movieId
-        state.selectedMovie = nil
-        
     case let action as SetSelectedMovie:
         state.selectedMovie = action.movie
         
