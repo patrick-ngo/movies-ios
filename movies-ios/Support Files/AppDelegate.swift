@@ -20,7 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.window = UIWindow(frame: UIScreen.main.bounds)
     self.window?.makeKeyAndVisible()
     
-    self.window?.rootViewController = UINavigationController(rootViewController: MovieListingsVC())
+//    self.window?.rootViewController = UINavigationController(rootViewController: MovieListingsVC())
+    
+    let rootCoordinator = RootCoordinator(keyWindow: self.window!)
+    rootCoordinator.start()
     
     // Override point for customization after application launch.
     return true

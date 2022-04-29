@@ -12,7 +12,11 @@ import ReSwift
 import RxSwift
 import RxCocoa
 
-class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, StoreSubscriber {
+final class MovieListViewController: UIViewController,
+                                     UITableViewDelegate,
+                                     UITableViewDataSource,
+                                     StoreSubscriber {
+
   typealias StoreSubscriberStateType = MovieListState
   
   let disposeBag = DisposeBag()
@@ -34,7 +38,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     tv.dataSource = self
     
     // Cell registration
-    tv.register(MovieListingsCell.self, forCellReuseIdentifier: String(describing: MovieListingsCell.self))
+    tv.register(MovieListCell.self, forCellReuseIdentifier: String(describing: MovieListCell.self))
     tv.register(TableViewLoadingCell.self, forCellReuseIdentifier: String(describing: TableViewLoadingCell.self))
     
     // Cell size
@@ -49,7 +53,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         mainStore.dispatch(SetSelectedMovie(movie: movie))
         
         // Go to movie detail screen
-        let movieDetailVC = MovieDetailVC()
+        let movieDetailVC = MovieDetailViewController()
         self.navigationController?.pushViewController(movieDetailVC, animated: true)
       })
       .disposed(by: disposeBag)
@@ -155,7 +159,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     // Get movie cell
-    let movieCell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListingsCell.self)) as? MovieListingsCell
+    let movieCell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListCell.self)) as? MovieListCell
     let movie = movieList[indexPath.row]
     movieCell?.movie = movie
     return movieCell!

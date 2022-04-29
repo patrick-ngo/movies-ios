@@ -1,5 +1,5 @@
 //
-//  MovieDetailVC.swift
+//  MovieDetailViewController.swift
 //  movies-ios
 //
 //  Created by Patrick Ngo on 14/06/19.
@@ -12,7 +12,8 @@ import ReSwift
 import RxSwift
 import RxCocoa
 
-class MovieDetailVC: UIViewController, StoreSubscriber {
+final class MovieDetailViewController: UIViewController,
+                                       StoreSubscriber {
   
   private enum Constants {
     static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
