@@ -24,7 +24,7 @@ DEPENDENCIES:
   - SnapKit
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - ReSwift
     - ReSwiftThunk
@@ -46,4 +46,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 55563b87cf7dcb03da2fcff32937b87e327eb680
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4
