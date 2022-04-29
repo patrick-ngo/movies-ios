@@ -142,6 +142,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B9C89DAA281C56EC0035D8ED /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C4F6A9201FB5EDC000219D8F /* UIColor+Hex.swift */,
+				B9B382FF22B7BE9500326BD6 /* UIVIew+Gradient.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		B9F84C8122B480DA00AD7551 /* Reducers */ = {
 			isa = PBXGroup;
 			children = (
@@ -181,12 +190,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		C46483001FB5F7360084A2FA /* API */ = {
+		C46483001FB5F7360084A2FA /* Network */ = {
 			isa = PBXGroup;
 			children = (
 				B9C89DA8281C4E910035D8ED /* MovieService.swift */,
 			);
-			path = API;
+			path = Network;
 			sourceTree = "<group>";
 		};
 		C465725A1FB5DBB100886506 = {
@@ -216,10 +225,11 @@
 			children = (
 				B9F84C8422B4810E00AD7551 /* Actions */,
 				B9F84C8122B480DA00AD7551 /* Reducers */,
-				C46483001FB5F7360084A2FA /* API */,
-				C4F6A91F1FB5ED9B00219D8F /* Global */,
-				C40F7A5B1FB60CE7002D6EE9 /* Models */,
 				B9F84C8F22B4AF4300AD7551 /* ViewControllers */,
+				C46483001FB5F7360084A2FA /* Network */,
+				C40F7A5B1FB60CE7002D6EE9 /* Models */,
+				C4F6A91F1FB5ED9B00219D8F /* Utils */,
+				B9C89DAA281C56EC0035D8ED /* Extensions */,
 				C4F6A9261FB5F27E00219D8F /* Support Files */,
 			);
 			path = "movies-ios";
@@ -243,14 +253,12 @@
 			path = "movies-iosUITests";
 			sourceTree = "<group>";
 		};
-		C4F6A91F1FB5ED9B00219D8F /* Global */ = {
+		C4F6A91F1FB5ED9B00219D8F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C4F6A9201FB5EDC000219D8F /* UIColor+Hex.swift */,
 				C45BF8121FB625330030E856 /* MovieUtil.swift */,
-				B9B382FF22B7BE9500326BD6 /* UIVIew+Gradient.swift */,
 			);
-			path = Global;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		C4F6A9221FB5EFD800219D8F /* Views */ = {
