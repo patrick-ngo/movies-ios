@@ -13,6 +13,12 @@ import RxSwift
 import RxCocoa
 
 class MovieDetailVC: UIViewController, StoreSubscriber {
+  
+  private enum Constants {
+    static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
+    static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
+  }
+  
   typealias StoreSubscriberStateType = MovieDetailState
   
   let disposeBag = DisposeBag()
@@ -21,13 +27,13 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
   
   private let locale = NSLocale(localeIdentifier: NSLocale.current.languageCode!)
   
-  private var movie: MovieModel? = nil {
+  private var movie: Movie? = nil {
     didSet {
       guard let movie = movie else { return }
       
       // Poster
       if let profilePic = movie.poster_path {
-        let imageUrl = URL(string: "\(MoviesAPI.BASE_URL_IMAGES_HIGH)\(profilePic)")
+        let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_HIGH)\(profilePic)")
         self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
       }
       
@@ -48,7 +54,7 @@ class MovieDetailVC: UIViewController, StoreSubscriber {
       if let genres = movie.genre_ids, genres.count > 0 {
         // Match genre ids with genre names
         let genreNames = genres.map { (genreId) -> String in
-          if let genre = Constants.allGenres().first(where: { genreId == $0.id() }) {
+          if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
             return genre.name()
           }
           return ""

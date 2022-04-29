@@ -51,7 +51,7 @@ class movies_iosTests: XCTestCase {
     }
     
     func testSetSelectedMovie() {
-        let movie = MovieModel(vote_count: nil, id: 12345, vote_average: 2.7573, title: "Rambo", popularity: 1.563, poster_path: nil, original_language: "en", original_title: "Rambo", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Rambo first blood", release_date: nil, runtime: 122)
+        let movie = MovieDetail(vote_count: nil, id: 12345, vote_average: 2.7573, title: "Rambo", popularity: 1.563, poster_path: nil, original_language: "en", original_title: "Rambo", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Rambo first blood", release_date: nil, runtime: 122)
         
         let action = SetSelectedMovie(movie: movie)
         
@@ -64,8 +64,8 @@ class movies_iosTests: XCTestCase {
     
     func testSetMovies() {
         let movies = [
-            MovieModel(vote_count: nil, id: 12345, vote_average: 2.7573, title: "Rambo", popularity: 1.563, poster_path: nil, original_language: "en", original_title: "Rambo", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Rambo: First Blood", release_date: nil, runtime: 122),
-            MovieModel(vote_count: nil, id: 12346, vote_average: 1.323, title: "Terminator", popularity: 3.123, poster_path: nil, original_language: "en", original_title: "Terminator", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Terminator: Judgement Day", release_date: nil, runtime: 122)
+            MovieDetail(vote_count: nil, id: 12345, vote_average: 2.7573, title: "Rambo", popularity: 1.563, poster_path: nil, original_language: "en", original_title: "Rambo", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Rambo: First Blood", release_date: nil, runtime: 122),
+            MovieDetail(vote_count: nil, id: 12346, vote_average: 1.323, title: "Terminator", popularity: 3.123, poster_path: nil, original_language: "en", original_title: "Terminator", genres: nil, genre_ids: nil, backdrop_path: nil, adult: true, overview: "Terminator: Judgement Day", release_date: nil, runtime: 122)
         ]
         
         let action = SetMovies(movies: movies, page: 2, hasNext: true)

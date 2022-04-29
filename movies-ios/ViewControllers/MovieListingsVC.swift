@@ -17,7 +17,7 @@ class MovieListingsVC: UIViewController, UITableViewDelegate, UITableViewDataSou
   
   let disposeBag = DisposeBag()
   
-  private var movieList: [MovieModel] = []
+  private var movieList: [Movie] = []
   
   private var page = 0
   private var isLoading =  false

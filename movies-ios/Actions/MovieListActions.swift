@@ -14,7 +14,7 @@ struct SetStartFetchingMovies: Action {
 }
 
 struct SetMovies: Action {
-  let movies: [MovieModel]
+  let movies: [Movie]
   let page: Int
   let hasNext: Bool
 }
@@ -27,30 +27,28 @@ func fetchMovies(_ reloadAll: Bool) -> Thunk<AppState> {
     }
     let page = reloadAll ? 1 : state.currentPage + 1
     var hasNext = false
-    var movieList: [MovieModel] = []
+    var movieList: [Movie] = []
     
     dispatch(SetStartFetchingMovies(isFetchingMovies: true))
     
-    MoviesAPI.shared.retrieveMovies(page: page) { (result, error) in
-      if let result = result, error == nil {
-        do {
-          let moviesResponse = try JSONDecoder().decode(MovieListModel.self, from: result)
-          
-          // Check if there are more movies to load
-          if let totalPages = moviesResponse.total_pages {
-            hasNext = page < totalPages
-          }
-          
-          // Set list of movies
-          if let movies = moviesResponse.results {
-            movieList = reloadAll ? movies : state.movies + movies
-          }
-          
-          dispatch(SetMovies(movies: movieList, page: page, hasNext: hasNext))
+    let movieService = MovieServiceImp()
+    movieService.fetchNowPlayingMovies(for: page) { nowPlayingResult in
+      switch nowPlayingResult {
+      case .success(let moviesResponse):
+        // Check if there are more movies to load
+        if let totalPages = moviesResponse.total_pages {
+          hasNext = page < totalPages
         }
-        catch let error {
-          print("Error: \(error)")
+        
+        // Set list of movies
+        if let movies = moviesResponse.results {
+          movieList = reloadAll ? movies : state.movies + movies
         }
+        
+        dispatch(SetMovies(movies: movieList, page: page, hasNext: hasNext))
+        
+      case .failure(let error):
+        print("Error: \(error)")
       }
     }
   }

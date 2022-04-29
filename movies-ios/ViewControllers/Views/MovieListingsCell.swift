@@ -12,9 +12,14 @@ import SDWebImage
 
 class MovieListingsCell: UITableViewCell {
   
+  private enum Constants {
+    static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
+    static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
+  }
+  
   //MARK: - Display data -
   
-  var movie: MovieModel? = nil {
+  var movie: Movie? = nil {
     didSet {
       guard let movie = movie else { return }
       
@@ -27,7 +32,7 @@ class MovieListingsCell: UITableViewCell {
       if let genres = movie.genre_ids, genres.count > 0 {
         // Match genre ids with genre names
         let genreNames = genres.map { (genreId) -> String in
-          if let genre = Constants.allGenres().first(where: { genreId == $0.id() }) {
+          if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
             return genre.name()
           }
           return ""
@@ -37,7 +42,7 @@ class MovieListingsCell: UITableViewCell {
       
       // Poster image
       if let poster = movie.poster_path {
-        let imageUrl = URL(string: "\(MoviesAPI.BASE_URL_IMAGES_LOW)\(poster)")
+        let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_LOW)\(poster)")
         self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
       }
       

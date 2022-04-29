@@ -7,7 +7,7 @@
 //
 
 
-class Constants {
+class MovieUtil {
   
   enum Genres {
     case action,

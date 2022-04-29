@@ -9,7 +9,7 @@
 import ReSwift
 
 struct MovieDetailState: Equatable {
-  var selectedMovie: MovieModel?
+  var selectedMovie: Movie?
 }
 
 func movieDetailReducer(action: Action, state: MovieDetailState?) -> MovieDetailState {

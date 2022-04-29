@@ -12,7 +12,7 @@ struct MovieListState: Equatable {
   var hasNext = false
   var currentPage = 0
   var isFetchingMovies = false
-  var movies: [MovieModel] = []
+  var movies: [Movie] = []
 }
 
 func movieListReducer(action: Action, state: MovieListState?) -> MovieListState {
