@@ -23,9 +23,6 @@ final class MovieDetailViewController: UIViewController,
   }
   var intent: MovieDetailIntentInput?
   let disposeBag = DisposeBag()
-
-  
-  private let locale = NSLocale(localeIdentifier: NSLocale.current.languageCode!)
   
   //MARK: - Views
   
@@ -100,6 +97,7 @@ final class MovieDetailViewController: UIViewController,
     setupViews()
     
     intent?.bind(to: self)
+    intent?.getMovie()
   }
   
   private func setupNavBar() {
@@ -149,7 +147,7 @@ final class MovieDetailViewController: UIViewController,
       make.left.right.equalTo(15)
     }
     languageLabel.snp.makeConstraints { (make) in
-      make.top.equalTo(self.synopsysLabel.snp.bottom).offset(10)
+      make.top.equalTo(synopsysLabel.snp.bottom).offset(10)
       make.left.right.equalTo(15)
     }
     runtimeLabel.snp.makeConstraints { (make) in
@@ -160,36 +158,13 @@ final class MovieDetailViewController: UIViewController,
   }
   
   func update(with state: MovieDetailState, prevState: MovieDetailState?) {
-    guard let movie = state.movie else { return }
+    titleLabel.text = state.title
+    synopsysLabel.text = state.synopsys
+    genresLabel.text = state.genres
+    languageLabel.text = state.language
+    runtimeLabel.text = state.runtime
     
-    if let profilePic = movie.poster_path {
-      let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_HIGH)\(profilePic)")
-      posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
-    }
-    if let name = movie.title {
-      titleLabel.text = name
-      title = name
-    }
-    if let overview = movie.overview {
-      synopsysLabel.text = overview
-    }
-    if let genres = movie.genre_ids,
-       genres.count > 0 {
-      let genreNames = genres.map { (genreId) -> String in
-        if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
-          return genre.name()
-        }
-        return ""
-      }
-      genresLabel.text = genreNames.joined(separator: " • ")
-    }
-    if let original_language = movie.original_language {
-      if let language = self.locale.displayName(forKey: NSLocale.Key.identifier, value: original_language) {
-        languageLabel.text = "\(NSLocalizedString("LABEL_LANGUAGE", comment: "Language")) \(language)"
-      }
-    }
-    if let runtime = movie.runtime {
-      languageLabel.text = "\(NSLocalizedString("LABEL_RUNTIME", comment: "Runtime")) \(runtime)m"
-    }
+    let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_HIGH)\(state.posterPath)")
+    posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
   }
 }
