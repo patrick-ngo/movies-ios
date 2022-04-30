@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import SDWebImage
 
-class MovieListCell: UITableViewCell {
+final class MovieListCell: UITableViewCell {
   
   private enum Constants {
     static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"

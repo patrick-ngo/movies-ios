@@ -40,9 +40,7 @@ final class RootCoordinator: Coordinator,
     let windowLevel = (UIApplication.shared.currentWindow?.windowLevel ?? .normal) + 1
     keyWindow?.windowLevel = windowLevel
     keyWindow?.makeKeyAndVisible()
-    
 
-    
     navigationController.present(rootNavigationController, animated: false) {}
     attachMovieList()
   }

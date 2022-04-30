@@ -1,5 +1,5 @@
 //
-//  TableViewLoadingCell.swift
+//  LoadingCell.swift
 //  movies-ios
 //
 //  Created by Patrick Ngo on 14/06/19.
@@ -8,27 +8,25 @@
 
 import UIKit
 
-class TableViewLoadingCell: UITableViewCell {
+final class LoadingCell: UITableViewCell {
   
   let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    self.selectionStyle = .none
+    selectionStyle = .none
     
-    self.contentView.addSubview(self.activityIndicator)
-    
-    self.activityIndicator.snp.makeConstraints { (make) in
+    contentView.addSubview(activityIndicator)
+    activityIndicator.snp.makeConstraints { (make) in
       make.width.height.equalTo(20)
-      make.center.equalTo(self.contentView)
+      make.center.equalTo(contentView)
     }
     
-    self.activityIndicator.startAnimating()
+    activityIndicator.startAnimating()
   }
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    
     self.activityIndicator.startAnimating()
   }
   

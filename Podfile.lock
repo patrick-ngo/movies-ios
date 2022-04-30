@@ -1,8 +1,5 @@
 PODS:
   - Alamofire (4.8.2)
-  - ReSwift (4.1.1)
-  - ReSwiftThunk (1.1.0):
-    - ReSwift (~> 4.0)
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -16,8 +13,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - ReSwift
-  - ReSwiftThunk
   - RxCocoa
   - RxSwift
   - SDWebImage
@@ -26,8 +21,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
-    - ReSwift
-    - ReSwiftThunk
     - RxCocoa
     - RxRelay
     - RxSwift
@@ -36,14 +29,12 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  ReSwift: d925be0033558f55bd73d92869961230dfe19d52
-  ReSwiftThunk: 727c1549dbd2949472e1c72bec44b1008d7c4f92
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
 
-PODFILE CHECKSUM: 55563b87cf7dcb03da2fcff32937b87e327eb680
+PODFILE CHECKSUM: 0091b06d5e45f9b1622f6b66c586f22fb9368644
 
 COCOAPODS: 1.8.4

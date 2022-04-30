@@ -9,8 +9,6 @@ target 'movies-ios' do
   pod 'Alamofire'
   pod 'SDWebImage'
   pod 'SnapKit'
-  pod 'ReSwift'
-  pod 'ReSwiftThunk'
   pod 'RxSwift'
   pod 'RxCocoa'
 

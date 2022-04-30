@@ -8,79 +8,52 @@
 
 import UIKit
 import SnapKit
-import ReSwift
 import RxSwift
 import RxCocoa
+
+protocol MovieListViewControllerInput: View where AssociatedState == MovieListState {}
 
 final class MovieListViewController: UIViewController,
                                      UITableViewDelegate,
                                      UITableViewDataSource,
-                                     StoreSubscriber {
-
-  typealias StoreSubscriberStateType = MovieListState
+                                     MovieListViewControllerInput {
   
-  let disposeBag = DisposeBag()
+  var intent: MovieListIntentInput?
   
-  private var movieList: [Movie] = []
-  
-  private var page = 0
-  private var isLoading =  false
   private var hasNext = true
+  private var movieList: [Movie] = []
+  private var isLoading =  false
   
-  //MARK: - Views -
+  //MARK: - Views
   
   private lazy var tableView : UITableView = {
-    let tv = UITableView(frame: CGRect.zero, style: .plain)
-    tv.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
+    let tv = UITableView(frame: .zero, style: .plain)
+    tv.separatorStyle = .singleLine
     tv.separatorColor = UIColor.Border.around
-    
     tv.delegate = self
     tv.dataSource = self
-    
-    // Cell registration
     tv.register(MovieListCell.self, forCellReuseIdentifier: String(describing: MovieListCell.self))
-    tv.register(TableViewLoadingCell.self, forCellReuseIdentifier: String(describing: TableViewLoadingCell.self))
-    
-    // Cell size
+    tv.register(LoadingCell.self, forCellReuseIdentifier: String(describing: LoadingCell.self))
     tv.rowHeight = UITableView.automaticDimension
     tv.estimatedRowHeight = 80
-    
-    // Rx item selection
-    tv.rx.itemSelected
-      .map { self.movieList[$0.row] }
-      .bind(onNext: { (movie) in
-        // Update selected movie
-        mainStore.dispatch(SetSelectedMovie(movie: movie))
-        
-        // Go to movie detail screen
-        let movieDetailVC = MovieDetailViewController()
-        self.navigationController?.pushViewController(movieDetailVC, animated: true)
-      })
-      .disposed(by: disposeBag)
-    
     return tv
   }()
   
   private lazy var refreshControl:UIRefreshControl = {
     let rc = UIRefreshControl()
-    rc.addTarget(self, action: #selector(self.reloadData(refreshControl:)), for: .valueChanged)
+    rc.addTarget(self, action: #selector(onRefreshPulled), for: .valueChanged)
     return rc
   }()
   
-  //MARK: - Init -
+  //MARK: - Init
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.setupNavBar()
-    self.setupViews()
+    setupNavBar()
+    setupViews()
     
-    
-    // subscribe to state changes
-    mainStore.subscribe(self) { subcription in
-      subcription.select { state in state.movieListState }
-    }
-    
-    self.loadData()
+    intent?.bind(to: self)
+    intent?.getMovies()
   }
   
   func setupNavBar() {
@@ -92,77 +65,77 @@ final class MovieListViewController: UIViewController,
   }
   
   func setupViews() {
-    // Add Refresh Control to Table View
+    view.addSubview(tableView)
     tableView.refreshControl = refreshControl
-    self.view.addSubview(self.tableView)
     
-    self.tableView.snp.makeConstraints { (make) in
+    tableView.snp.makeConstraints { (make) in
       make.left.right.bottom.equalTo(0)
       make.top.equalToSuperview()
     }
   }
   
-  //MARK: - State Updates -
-  func newState(state: MovieListState) {
-    self.isLoading = state.isFetchingMovies
-    self.hasNext = state.hasNext
-    
-    if self.page != state.currentPage && self.movieList.count != state.movies.count  {
-      // Set new movies
-      self.movieList = state.movies
-      self.page = state.currentPage
-      
-      // Reload table with new movies
-      self.tableView.reloadData()
+  // MARK: - Update from State
+
+  func update(with state: MovieListState, prevState: MovieListState?) {
+    hasNext = state.hasNext
+    isLoading = state.isLoading
+
+    if !state.isLoading,
+       refreshControl.isRefreshing {
+      refreshControl.endRefreshing()
     }
-    
-    // Stop refresh control, if necessary
-    if !self.isLoading {
-      if self.refreshControl.isRefreshing {
-        self.refreshControl.endRefreshing()
-      }
+
+    if state.movies != prevState?.movies {
+      movieList = state.movies
+      tableView.reloadData()
     }
   }
   
+  // MARK: - Interactions
   
-  func loadData(reloadAll:Bool = false) {
-    mainStore.dispatch(fetchMovies(reloadAll))
+  @objc func onRefreshPulled() {
+     intent?.getMovies()
+   }
+  
+  func onEndOfListReached() {
+    intent?.getMoreMovies()
   }
   
-  @objc func reloadData(refreshControl:UIRefreshControl) {
-    self.loadData(reloadAll:true)
+  func onMovieCellTapped(with index: Int) {
+    intent?.goToMovieDetail(with: index)
   }
   
-  //MARK: - TableView Datasource -
+  //MARK: - TableViewDelegate
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    // Add 1 for the loading cell
-    if self.hasNext {
+    if hasNext {
       return movieList.count + 1
     }
-    
     return movieList.count
   }
   
-  
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    // Start loading more when nearing the end of list
-    if indexPath.row >= self.movieList.count - 1 {
-      self.loadData()
+    if hasNext,
+       indexPath.row >= movieList.count - 1 {
+      onEndOfListReached()
     }
     
-    // Loading cell for last row
-    if self.hasNext,
-       indexPath.row >= self.movieList.count {
-      let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TableViewLoadingCell.self))
-      return cell!
+    if hasNext,
+       indexPath.row >= movieList.count {
+      let loadingCell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath)
+      return loadingCell
     }
     
-    // Get movie cell
-    let movieCell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListCell.self)) as? MovieListCell
-    let movie = movieList[indexPath.row]
-    movieCell?.movie = movie
-    return movieCell!
+    let movieCell = tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListCell.self), for: indexPath)
+    if let movieListCell = movieCell as? MovieListCell {
+      let movie = movieList[indexPath.row]
+      movieListCell.movie = movie
+    }
+    return movieCell
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    onMovieCellTapped(with: indexPath.row)
   }
 }
 

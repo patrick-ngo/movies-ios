@@ -35,7 +35,7 @@ class movies_iosTests: XCTestCase {
         
         let state = appReducer(action: action, state: nil)
         
-        guard state.movieListState.isFetchingMovies == true else {
+        guard state.movieListState.isFetching == true else {
             return XCTFail()
         }
     }

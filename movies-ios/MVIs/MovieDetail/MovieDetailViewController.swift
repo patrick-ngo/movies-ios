@@ -8,85 +8,35 @@
 
 import UIKit
 import SnapKit
-import ReSwift
 import RxSwift
 import RxCocoa
 
+protocol MovieDetailViewControllerInput: View where AssociatedState == MovieDetailState {}
+
+
 final class MovieDetailViewController: UIViewController,
-                                       StoreSubscriber {
+                                       MovieDetailViewControllerInput {
   
   private enum Constants {
     static let BASE_URL_IMAGES_LOW = "https://image.tmdb.org/t/p/w185"
     static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
   }
-  
-  typealias StoreSubscriberStateType = MovieDetailState
-  
+  var intent: MovieDetailIntentInput?
   let disposeBag = DisposeBag()
-  
-  var movieId: Int? = nil
+
   
   private let locale = NSLocale(localeIdentifier: NSLocale.current.languageCode!)
   
-  private var movie: Movie? = nil {
-    didSet {
-      guard let movie = movie else { return }
-      
-      // Poster
-      if let profilePic = movie.poster_path {
-        let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_HIGH)\(profilePic)")
-        self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
-      }
-      
-      // Title
-      if let name = movie.title {
-        self.titleLabel.text = name
-        
-        // Also change navigation bar title
-        self.title = name
-      }
-      
-      // Synopsys
-      if let overview = movie.overview {
-        self.synopsysLabel.text = overview
-      }
-      
-      // Genres
-      if let genres = movie.genre_ids, genres.count > 0 {
-        // Match genre ids with genre names
-        let genreNames = genres.map { (genreId) -> String in
-          if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
-            return genre.name()
-          }
-          return ""
-        }
-        self.genresLabel.text = genreNames.joined(separator: " • ")
-      }
-      
-      // Language
-      if let original_language = movie.original_language {
-        if let language = self.locale.displayName(forKey: NSLocale.Key.identifier, value: original_language) {
-          self.languageLabel.text = "\(NSLocalizedString("LABEL_LANGUAGE", comment: "Language")) \(language)"
-        }
-      }
-      
-      // Runtime
-      if let runtime = movie.runtime {
-        self.languageLabel.text = "\(NSLocalizedString("LABEL_RUNTIME", comment: "Runtime")) \(runtime)m"
-      }
-    }
-  }
+  //MARK: - Views
   
-  //MARK: - Views -
-  
-  let scrollView : UIScrollView = {
+  let scrollView: UIScrollView = {
     let sv = UIScrollView()
     sv.backgroundColor = .white
     sv.alwaysBounceVertical = true
     return sv
   }()
   
-  let posterImageView : UIImageView = {
+  let posterImageView: UIImageView = {
     let iv = UIImageView()
     iv.contentMode = .scaleAspectFit
     iv.clipsToBounds = true
@@ -99,7 +49,7 @@ final class MovieDetailViewController: UIViewController,
     return v
   }()
   
-  let titleLabel:UILabel = {
+  let titleLabel: UILabel = {
     let lbl = UILabel()
     lbl.text = ""
     lbl.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.bold)
@@ -108,7 +58,7 @@ final class MovieDetailViewController: UIViewController,
     return lbl
   }()
   
-  let synopsysLabel:UILabel = {
+  let synopsysLabel: UILabel = {
     let lbl = UILabel()
     lbl.text = ""
     lbl.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
@@ -118,7 +68,7 @@ final class MovieDetailViewController: UIViewController,
     return lbl
   }()
   
-  let genresLabel:UILabel = {
+  let genresLabel: UILabel = {
     let lbl = UILabel()
     lbl.text = ""
     lbl.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.light)
@@ -126,7 +76,7 @@ final class MovieDetailViewController: UIViewController,
     return lbl
   }()
   
-  let languageLabel:UILabel = {
+  let languageLabel: UILabel = {
     let lbl = UILabel()
     lbl.text = ""
     lbl.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.light)
@@ -134,7 +84,7 @@ final class MovieDetailViewController: UIViewController,
     return lbl
   }()
   
-  let runtimeLabel:UILabel = {
+  let runtimeLabel: UILabel = {
     let lbl = UILabel()
     lbl.text = ""
     lbl.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.light)
@@ -142,80 +92,104 @@ final class MovieDetailViewController: UIViewController,
     return lbl
   }()
   
-  //MARK: - Init -
+  //MARK: - Init
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.setupViews()
-    self.loadData()
+    setupNavBar()
+    setupViews()
     
-    mainStore.subscribe(self) { subcription in
-      subcription.select { state in state.movieDetailState }
-    }
+    intent?.bind(to: self)
+  }
+  
+  private func setupNavBar() {
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back",
+                                                       style: .plain,
+                                                       target: self,
+                                                       action: #selector(onBackButtonTapped))
+  }
+  
+  @objc func onBackButtonTapped() {
+    intent?.goBack()
   }
   
   func setupViews() {
-    self.view.addSubview(self.scrollView)
-    self.scrollView.addSubview(self.gradientView)
-    self.scrollView.addSubview(self.posterImageView)
+    view.addSubview(scrollView)
+    scrollView.addSubview(gradientView)
+    scrollView.addSubview(posterImageView)
+    scrollView.addSubview(titleLabel)
+    scrollView.addSubview(synopsysLabel)
+    scrollView.addSubview(genresLabel)
+    scrollView.addSubview(languageLabel)
+    scrollView.addSubview(runtimeLabel)
     
-    self.scrollView.addSubview(self.titleLabel)
-    self.scrollView.addSubview(self.synopsysLabel)
-    self.scrollView.addSubview(self.genresLabel)
-    self.scrollView.addSubview(self.languageLabel)
-    self.scrollView.addSubview(self.runtimeLabel)
-    
-    self.scrollView.snp.makeConstraints { (make) in
+    scrollView.snp.makeConstraints { (make) in
       make.edges.equalTo(0)
     }
-    
-    self.gradientView.snp.makeConstraints { (make) in
+    gradientView.snp.makeConstraints { (make) in
       make.height.equalTo(300)
-      make.right.left.equalTo(self.view)
+      make.right.left.equalTo(view)
     }
-    
-    self.posterImageView.snp.makeConstraints { (make) in
-      make.centerX.equalTo(self.scrollView.snp.centerX)
+    posterImageView.snp.makeConstraints { (make) in
+      make.centerX.equalTo(scrollView.snp.centerX)
       make.top.equalTo(0)
       make.height.equalTo(300)
     }
-    self.titleLabel.snp.makeConstraints { (make) in
-      make.top.equalTo(self.posterImageView.snp.bottom).offset(10)
+    titleLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(posterImageView.snp.bottom).offset(10)
       make.left.right.equalTo(15)
     }
-    
-    self.genresLabel.snp.makeConstraints { (make) in
-      make.top.equalTo(self.titleLabel.snp.bottom).offset(10)
+    genresLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.left.right.equalTo(15)
     }
-    
-    self.synopsysLabel.snp.makeConstraints { (make) in
-      make.top.equalTo(self.genresLabel.snp.bottom).offset(10)
+    synopsysLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(genresLabel.snp.bottom).offset(10)
       make.centerX.equalToSuperview()
       make.left.right.equalTo(15)
     }
-    
-    self.languageLabel.snp.makeConstraints { (make) in
+    languageLabel.snp.makeConstraints { (make) in
       make.top.equalTo(self.synopsysLabel.snp.bottom).offset(10)
       make.left.right.equalTo(15)
     }
-    
-    self.runtimeLabel.snp.makeConstraints { (make) in
-      make.top.equalTo(self.languageLabel.snp.bottom).offset(10)
+    runtimeLabel.snp.makeConstraints { (make) in
+      make.top.equalTo(languageLabel.snp.bottom).offset(10)
       make.left.right.equalTo(15)
       make.bottom.equalToSuperview().offset(-30)
     }
   }
   
-  //MARK: - State Updates -
-  func newState(state: MovieDetailState) {
-    if let selectedMovie = state.selectedMovie {
-      self.movie = selectedMovie
+  func update(with state: MovieDetailState, prevState: MovieDetailState?) {
+    guard let movie = state.movie else { return }
+    
+    if let profilePic = movie.poster_path {
+      let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_HIGH)\(profilePic)")
+      posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
     }
-  }
-  
-  
-  func loadData() {
-    mainStore.dispatch(fetchRelatedMovies)
+    if let name = movie.title {
+      titleLabel.text = name
+      title = name
+    }
+    if let overview = movie.overview {
+      synopsysLabel.text = overview
+    }
+    if let genres = movie.genre_ids,
+       genres.count > 0 {
+      let genreNames = genres.map { (genreId) -> String in
+        if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
+          return genre.name()
+        }
+        return ""
+      }
+      genresLabel.text = genreNames.joined(separator: " • ")
+    }
+    if let original_language = movie.original_language {
+      if let language = self.locale.displayName(forKey: NSLocale.Key.identifier, value: original_language) {
+        languageLabel.text = "\(NSLocalizedString("LABEL_LANGUAGE", comment: "Language")) \(language)"
+      }
+    }
+    if let runtime = movie.runtime {
+      languageLabel.text = "\(NSLocalizedString("LABEL_RUNTIME", comment: "Runtime")) \(runtime)m"
+    }
   }
 }

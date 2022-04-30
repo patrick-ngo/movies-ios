@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
+  var rootCoordinator: RootCoordinator?
   
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -22,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 //    self.window?.rootViewController = UINavigationController(rootViewController: MovieListingsVC())
     
-    let rootCoordinator = RootCoordinator(keyWindow: self.window!)
-    rootCoordinator.start()
+    rootCoordinator = RootCoordinator(keyWindow: self.window!)
+    rootCoordinator?.start()
     
     // Override point for customization after application launch.
     return true

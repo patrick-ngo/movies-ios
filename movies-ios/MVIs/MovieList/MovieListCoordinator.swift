@@ -10,13 +10,12 @@ import UIKit
 import CoreLocation
 
 protocol MovieListCoordinatorInput: Coordinator {
-  func goToMovieDetail()
+  func goToMovieDetail(with movie: Movie)
 }
 
 final class MovieListCoordinator: MovieListCoordinatorInput {
 
   weak var parentCoordinator: Coordinator?
-
   var childCoordinators = [Coordinator]()
 
   private let navigationController: UINavigationController
@@ -30,6 +29,9 @@ final class MovieListCoordinator: MovieListCoordinatorInput {
 
   func start() {
     let viewController = MovieListViewController()
+    let intent = MovieListIntent(contributionService: dependency.movieService)
+    intent.coordinator = self
+    viewController.intent = intent
     navigationController.viewControllers = [viewController]
   }
 
@@ -38,7 +40,12 @@ final class MovieListCoordinator: MovieListCoordinatorInput {
     parentCoordinator?.finish()
   }
 
-  func goToMovieDetail() {
-
+  func goToMovieDetail(with movie: Movie) {
+    let movieDetailCoordinator = MovieDetailCoordinator(navigationController: navigationController,
+                                                      dependency: dependency,
+                                                      movie: movie)
+    movieDetailCoordinator.parentCoordinator = self
+    movieDetailCoordinator.start()
+    childCoordinators.append(movieDetailCoordinator)
   }
 }
