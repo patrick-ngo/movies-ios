@@ -20,11 +20,11 @@ final class MovieListViewController: UIViewController,
   
   var intent: MovieListIntentInput?
   
+  private var movieViewModels: [MovieListCellViewModel] = []
   private var hasNext = true
-  private var movieList: [Movie] = []
   private var isLoading =  false
   
-  //MARK: - Views
+  // MARK: - Views
   
   private lazy var tableView : UITableView = {
     let tv = UITableView(frame: .zero, style: .plain)
@@ -45,7 +45,7 @@ final class MovieListViewController: UIViewController,
     return rc
   }()
   
-  //MARK: - Init
+  // MARK: - Init
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -85,8 +85,8 @@ final class MovieListViewController: UIViewController,
       refreshControl.endRefreshing()
     }
 
-    if state.movies != prevState?.movies {
-      movieList = state.movies
+    if state.movieViewModels != prevState?.movieViewModels {
+      movieViewModels = state.movieViewModels
       tableView.reloadData()
     }
   }
@@ -105,31 +105,31 @@ final class MovieListViewController: UIViewController,
     intent?.goToMovieDetail(with: index)
   }
   
-  //MARK: - TableViewDelegate
+  // MARK: - TableViewDelegate
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if hasNext {
-      return movieList.count + 1
+      return movieViewModels.count + 1
     }
-    return movieList.count
+    return movieViewModels.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     if hasNext,
-       indexPath.row >= movieList.count - 1 {
+       indexPath.row >= movieViewModels.count - 1 {
       onEndOfListReached()
     }
     
     if hasNext,
-       indexPath.row >= movieList.count {
+       indexPath.row >= movieViewModels.count {
       let loadingCell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath)
       return loadingCell
     }
     
     let movieCell = tableView.dequeueReusableCell(withIdentifier: String(describing: MovieListCell.self), for: indexPath)
     if let movieListCell = movieCell as? MovieListCell {
-      let movie = movieList[indexPath.row]
-      movieListCell.movie = movie
+      let viewModel = movieViewModels[indexPath.row]
+      movieListCell.update(with: viewModel)
     }
     return movieCell
   }

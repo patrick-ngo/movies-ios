@@ -10,7 +10,7 @@ import UIKit
 
 final class LoadingCell: UITableViewCell {
   
-  let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: .gray)
+  private let activityIndicator = UIActivityIndicatorView(style: .gray)
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,7 +27,7 @@ final class LoadingCell: UITableViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
-    self.activityIndicator.startAnimating()
+    activityIndicator.startAnimating()
   }
   
   

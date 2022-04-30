@@ -10,6 +10,13 @@ import UIKit
 import SnapKit
 import SDWebImage
 
+struct MovieListCellViewModel: Equatable {
+  let title: String?
+  let genres: String?
+  let posterUrl: String?
+  let popularity: String?
+}
+
 final class MovieListCell: UITableViewCell {
   
   private enum Constants {
@@ -17,54 +24,16 @@ final class MovieListCell: UITableViewCell {
     static let BASE_URL_IMAGES_HIGH = "https://image.tmdb.org/t/p/w500"
   }
   
-  //MARK: - Display data -
+  //MARK: - Views
   
-  var movie: Movie? = nil {
-    didSet {
-      guard let movie = movie else { return }
-      
-      // Title
-      if let title = movie.title {
-        self.titleLabel.text = title
-      }
-      
-      // Genres
-      if let genres = movie.genre_ids, genres.count > 0 {
-        // Match genre ids with genre names
-        let genreNames = genres.map { (genreId) -> String in
-          if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
-            return genre.name()
-          }
-          return ""
-        }
-        self.genresLabel.text = genreNames.joined(separator: " • ")
-      }
-      
-      // Poster image
-      if let poster = movie.poster_path {
-        let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_LOW)\(poster)")
-        self.posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
-      }
-      
-      // Popularity
-      if let popularity = movie.popularity, popularity > 0 {
-        self.popularityLabel.text = String(popularity)
-      }
-    }
-  }
-  
-  
-  
-  //MARK: - Views -
-  
-  let posterImageView : UIImageView = {
+  let posterImageView: UIImageView = {
     let iv = UIImageView()
     iv.contentMode = .scaleAspectFit
     iv.clipsToBounds = true
     return iv
   }()
   
-  let popularityLabel : UILabel = {
+  let popularityLabel: UILabel = {
     let lbl = UILabel()
     lbl.numberOfLines = 1
     lbl.font = UIFont.systemFont(ofSize: 12)
@@ -74,7 +43,7 @@ final class MovieListCell: UITableViewCell {
     return lbl
   }()
   
-  let genresLabel : UILabel = {
+  let genresLabel: UILabel = {
     let lbl = UILabel()
     lbl.font = UIFont.systemFont(ofSize: 11)
     lbl.textColor = UIColor.Text.darkGrey
@@ -83,7 +52,7 @@ final class MovieListCell: UITableViewCell {
     return lbl
   }()
   
-  lazy var titleLabel : UILabel = {
+  lazy var titleLabel: UILabel = {
     let lbl = UILabel()
     lbl.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
     lbl.textColor = UIColor.Text.darkGrey
@@ -92,7 +61,7 @@ final class MovieListCell: UITableViewCell {
     return lbl
   }()
   
-  //MARK: - Init -
+  //MARK: - Init
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style:style, reuseIdentifier:reuseIdentifier)
@@ -100,38 +69,35 @@ final class MovieListCell: UITableViewCell {
   }
   
   func setupViews() {
-    self.selectionStyle = .none
-    self.contentView.addSubview(self.posterImageView)
-    self.contentView.addSubview(self.titleLabel)
-    self.contentView.addSubview(self.genresLabel)
-    self.contentView.addSubview(self.popularityLabel)
+    selectionStyle = .none
+    contentView.addSubview(posterImageView)
+    contentView.addSubview(titleLabel)
+    contentView.addSubview(genresLabel)
+    contentView.addSubview(popularityLabel)
     
-    self.posterImageView.snp.makeConstraints { (make) in
-      make.left.equalTo(self.contentView.snp.left).offset(10)
+    posterImageView.snp.makeConstraints { (make) in
+      make.left.equalTo(contentView.snp.left).offset(10)
       make.width.height.equalTo(70)
       make.top.equalTo(4)
       make.bottom.equalTo(0).offset(-4)
     }
-    
-    self.titleLabel.snp.makeConstraints { (make) in
-      make.left.equalTo(self.posterImageView.snp.right).offset(10)
-      make.right.equalTo(self.contentView)
+    titleLabel.snp.makeConstraints { (make) in
+      make.left.equalTo(posterImageView.snp.right).offset(10)
+      make.right.equalTo(contentView)
       make.height.equalTo(15)
       make.top.equalTo(4)
     }
-    
-    self.genresLabel.snp.makeConstraints { (make) in
-      make.left.equalTo(self.posterImageView.snp.right).offset(10)
-      make.right.equalTo(self.contentView)
+    genresLabel.snp.makeConstraints { (make) in
+      make.left.equalTo(posterImageView.snp.right).offset(10)
+      make.right.equalTo(contentView)
       make.height.equalTo(16)
-      make.top.equalTo(self.titleLabel.snp.bottom).offset(4)
+      make.top.equalTo(titleLabel.snp.bottom).offset(4)
     }
-    
-    self.popularityLabel.snp.makeConstraints { (make) in
-      make.left.equalTo(self.posterImageView.snp.right).offset(10)
-      make.right.equalTo(self.contentView)
+    popularityLabel.snp.makeConstraints { (make) in
+      make.left.equalTo(posterImageView.snp.right).offset(10)
+      make.right.equalTo(contentView)
       make.height.equalTo(16)
-      make.top.equalTo(self.genresLabel.snp.bottom).offset(4)
+      make.top.equalTo(genresLabel.snp.bottom).offset(4)
     }
   }
   
@@ -139,7 +105,7 @@ final class MovieListCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  //MARK: - Helper Methods -
+  // MARK: - Highlight
   
   override func setHighlighted(_ highlighted: Bool, animated: Bool) {
     if highlighted {
@@ -147,5 +113,16 @@ final class MovieListCell: UITableViewCell {
     } else {
       self.backgroundColor = .white
     }
+  }
+  
+  // MARK: - Update
+  
+  func update(with viewModel: MovieListCellViewModel) {
+    titleLabel.text = viewModel.title
+    genresLabel.text = viewModel.genres
+    popularityLabel.text = viewModel.popularity
+    
+    let imageUrl = URL(string: "\(Constants.BASE_URL_IMAGES_LOW)\(viewModel.posterUrl ?? "")")
+    posterImageView.sd_setImage(with: imageUrl, placeholderImage: nil)
   }
 }

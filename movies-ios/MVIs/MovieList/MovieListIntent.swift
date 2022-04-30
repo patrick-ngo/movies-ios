@@ -73,12 +73,40 @@ final class MovieListIntent: MovieListIntentInput {
            let totalCount = nowPlayingMoviesResponse.total_results,
            let currentPage = nowPlayingMoviesResponse.page {
           let hasNext = this.calculateHasNext(with: totalCount, currentPage: currentPage)
-          
           let updatedMovies = currentPage == Constants.firstPage ? movies : this.currentState.movies + movies
+
+          let movieViewModels = movies.map { movie -> MovieListCellViewModel in
+            var genres: String?
+            if let genreIds = movie.genre_ids,
+               genreIds.count > 0 {
+              // Match genre ids with genre names
+              let genreNames = genreIds.map { (genreId) -> String in
+                if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
+                  return genre.name()
+                }
+                return ""
+              }
+              genres = genreNames.joined(separator: " • ")
+            }
+            
+            var popularity: String?
+            if let popularityValue = movie.popularity,
+               popularityValue > 0 {
+              popularity = String(popularityValue)
+            }
+            return MovieListCellViewModel(title: movie.title,
+                                          genres: genres,
+                                          posterUrl: movie.poster_path,
+                                          popularity: popularity)
+          }
+          
+
+          let updatedMovieViewModels = currentPage == Constants.firstPage ? movieViewModels : this.currentState.movieViewModels + movieViewModels
           this.stateDriver.accept(MovieListState(prevState: this.currentState,
-                                                  hasNext: hasNext,
+                                                 hasNext: hasNext,
                                                  isFetching: false,
-                                                  movies: updatedMovies))
+                                                 movies: updatedMovies,
+                                                 movieViewModels: updatedMovieViewModels))
         }
       case .failure:
         this.stateDriver.accept(MovieListState(prevState: this.currentState,
