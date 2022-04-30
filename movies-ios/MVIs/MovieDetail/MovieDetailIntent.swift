@@ -55,16 +55,11 @@ final class MovieDetailIntent: MovieDetailIntentInput {
     coordinator?.finish()
   }
   
-  func getMovie() {  
+  func getMovie() {
     var genres = ""
     if let genreIds = movie.genre_ids,
                        genreIds.count > 0 {
-      let genreNames = genreIds.map { (genreId) -> String in
-        if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
-          return genre.name()
-        }
-        return ""
-      }
+      let genreNames = genreIds.map { Genres(rawValue: $0)?.name ?? "" }
       genres = genreNames.joined(separator: " • ")
     }
 

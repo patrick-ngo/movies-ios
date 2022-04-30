@@ -80,12 +80,7 @@ final class MovieListIntent: MovieListIntentInput {
             if let genreIds = movie.genre_ids,
                genreIds.count > 0 {
               // Match genre ids with genre names
-              let genreNames = genreIds.map { (genreId) -> String in
-                if let genre = MovieUtil.allGenres().first(where: { genreId == $0.id() }) {
-                  return genre.name()
-                }
-                return ""
-              }
+              let genreNames = genreIds.map { Genres(rawValue: $0)?.name ?? "" }
               genres = genreNames.joined(separator: " • ")
             }
             
