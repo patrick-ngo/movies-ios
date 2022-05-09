@@ -1,5 +1,10 @@
 PODS:
   - Alamofire (4.8.2)
+  - iOSSnapshotTestCase (8.0.0):
+    - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
+  - iOSSnapshotTestCase/Core (8.0.0)
+  - iOSSnapshotTestCase/SwiftSupport (8.0.0):
+    - iOSSnapshotTestCase/Core
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -13,6 +18,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - iOSSnapshotTestCase
   - RxCocoa
   - RxSwift
   - SDWebImage
@@ -26,15 +32,18 @@ SPEC REPOS:
     - RxSwift
     - SDWebImage
     - SnapKit
+  trunk:
+    - iOSSnapshotTestCase
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
 
-PODFILE CHECKSUM: 0091b06d5e45f9b1622f6b66c586f22fb9368644
+PODFILE CHECKSUM: 74f25e96c45dc9e12a63ce37f888ee391c8d44cf
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.11.3
