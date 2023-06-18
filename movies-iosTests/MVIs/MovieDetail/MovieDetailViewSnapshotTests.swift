@@ -1,5 +1,5 @@
 //
-//  MovieDetailViewSnapshotTests.swift
+//  MovieDetailViewSnapshotTests.swift //
 //  movies-iosTests
 //
 //  Created by Patrick Ngo on 2022-05-09.
